@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      article {
+        border: 2px solid #333;
+      }
+    </style>
+    <section id="data-container"></section>
+
+    <template>
+      <article id="info">
+        <h3></h3>
+        <img src="" alt="" />
+        <p class="type"></p>
+        <p class="levested"></p>
+      </article>
+    </template>
+    <script>
+      document.addEventListener("DOMContentLoaded", start());
+
+      function start() {
+        console.log("start");
+
+        const container = document.querySelector("#data-container");
+        const dyreTemplate = document.querySelector("template");
+        const article = document.querySelector("#info");
+
+        // JSON fil hents vha. fetch()
+        const fil = "alleDyr.json";
+        async function hentdata(fil) {
+          const resultat = await fetch(fil);
+          const json = await resultat.json();
+          vis(json);
+        }
+
+        // Funktion der udfylder template med information for hvert objekt i JSON-filen
+        function vis(dyrene) {
+          dyrene.forEach((dyr) => {
+            let klon = dyreTemplate.cloneNode(true).content;
+            klon.querySelector("h3").textContent = dyr.navn;
+            klon.querySelector("img").src = dyr.billede;
+            klon.querySelector(".type").textContent = "Type: " + dyr.type;
+            klon.querySelector(".levested").textContent =
+              "Levested: " + dyr.levested;
+            container.appendChild(klon);
+          });
+        }
+        hentdata(fil);
+      }
+    </script>
+  </body>
+</html>
